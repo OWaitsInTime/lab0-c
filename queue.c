@@ -27,21 +27,30 @@ void q_free(struct list_head *l)
     if (!l)
         return;
 
-    element_t *fnode = l->next;
-    element_t *lnode = l->led->next;
+    struct list_head *fnode = l->next;
+    struct list_head *lnode = l->next->next;
     while (lnode != l) {
         lnode = lnode->next;
-        q_release_element(fnode);
+        q_release_element(container_of(fnode, element_t, list));
         fnode = lnode->prev;
     }
 
-    q_release_element(fnode);
+    q_release_element(container_of(fnode, element_t, list));
     free(l);
 }
 
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
 {
+    if (!head)
+        return false;
+
+    element_t *insert = malloc(sizeof(element_t));
+    if (!insert)
+        return false;
+
+    insert->value = strdup(s);
+    list_add(&insert->list, head);
     return true;
 }
 
