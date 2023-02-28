@@ -87,7 +87,6 @@ element_t *q_remove_head(struct list_head *head, char *sp, size_t bufsize)
     sp[bufsize - 1] = '\0';
     list_del(&node->list);
     return node;
-
 }
 
 /* Remove an element from tail of queue */
@@ -100,7 +99,6 @@ element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
     sp[bufsize - 1] = '\0';
     list_del(&node->list);
     return node;
-
 }
 
 /* Return number of elements in queue */
@@ -121,9 +119,18 @@ int q_size(struct list_head *head)
 bool q_delete_mid(struct list_head *head)
 {
     // https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/
+    if (!head || list_empty(head))
+        return false;
+    int mid = (q_size(head) / 2) + 1;
+    struct list_head *current = head;
+    while (mid != 0) {
+        current = current->next;
+        mid--;
+    }
+
+    q_release_element(list_entry(current, element_t, list));
     return true;
 }
-
 /* Delete all nodes that have duplicate string */
 bool q_delete_dup(struct list_head *head)
 {
